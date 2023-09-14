@@ -25,6 +25,11 @@ type User {
   updatedAt: DateTime!
 }
 
+type SignInResponse {
+  accessToken: String!
+  user: User!
+}
+
 type Query {
   getTasks(userId: Int!): [Task]!
   getUser(email: String!): User
@@ -35,6 +40,7 @@ type Mutation {
   updateTask(updateTaskInput: UpdateTaskInput!): Task!
   deleteTask(deleteTaskInput: DeleteTaskInput!): Task!
   createUser(createUserInput: CreateUserInput!): User!
+  signIn(signInInput: SignInInput!): SignInResponse!
 }
 
 input CreateTaskInput {
@@ -58,6 +64,11 @@ input DeleteTaskInput {
 
 input CreateUserInput {
   name: String!
+  email: String!
+  password: String!
+}
+
+input SignInInput {
   email: String!
   password: String!
 }
