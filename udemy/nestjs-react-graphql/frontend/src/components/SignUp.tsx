@@ -10,6 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useMutation } from '@apollo/client';
+import { SIGN_IN, SIGN_UP } from '../mutations/authMutations';
+import { User } from '../types/user';
+import { SignInResponse } from '../types/signinResponse';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
@@ -17,14 +22,32 @@ export default function SignUp() {
   const [name, setName] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [signUp] = useMutation<{createUser: User}>(SIGN_UP);
+  const [signIn] = useMutation<SignInResponse>(SIGN_IN);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log({
-      name,
-      email,
-      password,
-    });
+    const signUpInput = { name, email, password };
+
+    try {
+      const result = await signUp({
+        variables: { createUserInput: signUpInput }
+      });
+      if (result.data?.createUser) {
+        const signInInput = { email, password };
+        const result = await signIn({
+          variables: { signInInput }
+        });
+        if (result.data) {
+          localStorage.setItem('token', result.data.signIn.accessToken);
+        }
+        localStorage.getItem('token') && navigate('/');
+      }
+    } catch(err: any) {
+      alert('ユーザーの作成に失敗しました');
+      return;
+    }
   };
 
   return (
