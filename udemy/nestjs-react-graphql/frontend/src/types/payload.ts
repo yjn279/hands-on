@@ -1,6 +1,6 @@
 export type Payload = {
     email: string;
-    sum: number;
+    sub: number;
     iat: number;
     exp: number;
 };
