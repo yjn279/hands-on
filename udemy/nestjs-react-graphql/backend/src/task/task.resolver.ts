@@ -4,7 +4,6 @@ import { Task as TaskModel } from './models/task.model';
 import { CreateTaskInput } from './dto/createTask.input';
 import { Task } from '@prisma/client';
 import { UpdateTaskInput } from './dto/updateTask.input';
-import { DeleteTaskInput } from './dto/deleteTask.input';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
@@ -39,8 +38,8 @@ export class TaskResolver {
     @Mutation(() => TaskModel)
     @UseGuards(JwtAuthGuard)
     async deleteTask(
-        @Args('deleteTaskInput') deleteTaskInput: DeleteTaskInput
+        @Args('id', { type: () => Int }) id: number
     ): Promise <Task> {
-        return await this.taskService.deleteTask(deleteTaskInput);
+        return await this.taskService.deleteTask(id);
     }
 }
