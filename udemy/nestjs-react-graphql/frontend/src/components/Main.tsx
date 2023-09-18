@@ -7,6 +7,7 @@ import { GET_TASKS } from "../queries/taskQueries";
 import { useQuery } from "@apollo/client";
 import Loading from "./Loading";
 import { Stack, Typography } from "@mui/material";
+import AddTask from "./AddTask";
 
 const Main = () => {
     const token = localStorage.getItem('token');
@@ -29,7 +30,12 @@ const Main = () => {
             >
                 { loading && <Loading /> }
                 { error && <Typography color='red'>エラーが発生しました</Typography> }
-                { !loading && !error && <TaskTable tasks={data?.getTasks} userId={userId} /> }
+                { !loading && !error && (
+                    <>
+                        <AddTask />
+                        <TaskTable tasks={data?.getTasks} userId={userId} />
+                    </>
+                )}
             </Stack>
         </>
     )
